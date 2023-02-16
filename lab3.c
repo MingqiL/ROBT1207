@@ -325,12 +325,12 @@ cabbage getGCD(cabbage gcdPlaceHolder, cabbage* div1, cabbage* div2, size_t* num
 void printAllDivisors(cabbage* div1, cabbage* div2, cabbage* n1, cabbage* n2)
 {
 	cabbage numPerLine = 12, fieldWidth, divCount;
-	fieldWidth = CONSOLE_WIDTH / numPerLine -2;
+	fieldWidth = CONSOLE_WIDTH / numPerLine -1;
 
 	printf("The divisors of %u are:\n", *n1);
 	for (divCount = 0; *(div1 + divCount + 1) != 0; divCount++)
 	{
-		printf("%*u, ", fieldWidth, *(div1 + divCount));
+		printf("%*u,", fieldWidth, *(div1 + divCount));
 
 	}
 	printf("%*u\n\n", fieldWidth, *n1);
@@ -338,7 +338,7 @@ void printAllDivisors(cabbage* div1, cabbage* div2, cabbage* n1, cabbage* n2)
 	printf("The divisors of %u are:\n", *n2);
 	for (divCount = 0; *(div2 + divCount + 1) != 0; divCount++)
 	{
-		printf("%*u, ", fieldWidth, *(div2 + divCount));
+		printf("%*u,", fieldWidth, *(div2 + divCount));
 
 	}
 	printf("%*u\n", fieldWidth, *n2);
