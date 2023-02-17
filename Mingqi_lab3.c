@@ -144,48 +144,50 @@ void getProgramInputData(cabbage* n1, cabbage* n2)
 
 //----------------------------------------------------------------------------------------------------------------
 // DESCRIPTION: Gets the whole number from the user for n1 and n2
-// INPUTS:      none
+// INPUTS:      n_count[]: indicates the text for n1 or n2
 // RETURN:      the whole number from the user
 cabbage getWholeNumber(char n_count[])
 {
 	cabbage n;
 	int ret;
 	bool b;
-	long double decTest;
+	//long double decTest;
 	signed long long int longTest;
 
 	printf("Please enter the %s (>0 and <=4294967295): ", n_count);
 	do {
-		ret = scanf_s("%lf", &decTest);
-		longTest = decTest;
+		ret = scanf_s("%lld", &longTest);
+		
 		//printf("decTest is %lf\n", decTest);
 		//printf("longTest is %lld\n", longTest);
 		//printf("ref is :%d \n", ret);
 		b = flushInputBuffer();
+		//longTest = decTest;
+
 		if (ret == false) {                            // clean up input with leading garbage
-			printf("Input has leading garbage!\n");
+			printf("ERROR!!! That is NOT a number! Please don't include leading garbage!\n");
 			printf("Please enter a whole number > 0: ");
 		}
 		else if (b) {                                  // clean up input with trailing garbage
-			printf("Input has trailing garbage!\n");
+			printf("ERROR!!! That is NOT a number! Please don't include trailing garbage!\n");
 			printf("Please enter a whole number > 0: ");
 		}
-		else if (longTest < 0) {                        // clean up negative input
-			printf("Nagative number is not accepted!\n");
-			printf("Please enter a whole number > 0: ");
-		}
-		else if ((long long int)decTest != decTest) {  // clean up decimal input
-			printf("Decimal number is not accepted!\n");
-			printf("Please enter a whole number > 0: ");
-		}
-		else if (longTest > UINT_MAX) {                   // clean up out-of-range input
+		//else if (longTest < 0) {                        // clean up negative input
+		//	printf("Nagative number is not accepted!\n");
+		//	printf("Please enter a whole number > 0: ");
+		//}
+		//else if ((long long int)decTest != decTest) {  // clean up decimal input
+		//	printf("Decimal number is not accepted!\n");
+		//	printf("Please enter a whole number > 0: ");
+		//}
+		else if (longTest > UINT_MAX || longTest <= 0) {   // clean up out-of-range input
 			printf("Input is outside range!\n");
-			printf("Please enter a whole number > 0: ");
+			printf("Please enter a whole number > 0 and <= 4294967295: ");
 		}
-		else if (longTest == 0) {                         // clean up zero input
-			printf("Zero is not accepted!\n");
-			printf("Please enter a whole number > 0: ");
-		}
+		//else if (longTest == 0) {                         // clean up zero input
+		//	printf("Zero is not accepted!\n");
+		//	printf("Please enter a whole number > 0: ");
+		//}
 		else {                                         // record the input with right form
 			n = (cabbage)longTest;
 			printf("You have entered %u\n\n", n);
@@ -199,6 +201,15 @@ cabbage getWholeNumber(char n_count[])
 	return n;
 }
 
+//----------------------------------------------------------------------------------------------------------------
+// DESCRIPTION: Gets all divisors of the whole number from the user
+// INPUTS:      n1:         1st whole number from the user
+//              n2:         2nd whole number from the user
+//              numDiv1:    number of divisors for n1
+//              numDiv2:    number of divisors for n2
+//              divisors11: value to update in the divisor array for n1
+//              divisors22: value to update in the divisor array for n2
+// RETURN:      none
 void getAllDivisors(cabbage n1, cabbage n2, size_t* numDiv1, size_t* numDiv2, cabbage* divisors11, cabbage* divisors22)
 {
 	printf("Getting divisors of %u. Pleases be patient...", n1);
@@ -212,6 +223,12 @@ void getAllDivisors(cabbage n1, cabbage n2, size_t* numDiv1, size_t* numDiv2, ca
 
 }
 
+//----------------------------------------------------------------------------------------------------------------
+// DESCRIPTION: Gets all divisors of one of the whole number from the user
+// INPUTS:      n:            one of the whole number from the user
+//              divisorArray: divisor array for n
+//              divCount:     counting number of divisors for n
+// RETURN:      none
 void getDivisors(cabbage n, cabbage* divisorArray, size_t* divCount)
 {
 	cabbage testDiv, divisorIndex = 0;
@@ -259,6 +276,14 @@ void getDivisors(cabbage n, cabbage* divisorArray, size_t* divCount)
 
 }
 
+//----------------------------------------------------------------------------------------------------------------
+// DESCRIPTION: Gets the Greatest Common Divisor (GCD) of whole numbers from the user
+// INPUTS:      gcdPlaceHolder: place holder for the gcd for returning at the end
+//              div1:           1st divisor in the divisor array for n1
+//              div2:           2nd divisor in the divisor array for n2
+//              numDiv1:        number of divisors in the array for n1
+//              numDiv2:        number of divisors in the array for n2
+// RETURN:      the GCD for n1 and n2
 cabbage getGCD(cabbage gcdPlaceHolder, cabbage* div1, cabbage* div2, size_t* numDiv1, size_t* numDiv2)
 {
 	cabbage* n1_end, * n2_end, switchHandle, indexMin, indexMax, divLenMin, divLenMax;
@@ -322,23 +347,42 @@ cabbage getGCD(cabbage gcdPlaceHolder, cabbage* div1, cabbage* div2, size_t* num
 
 }
 
+//----------------------------------------------------------------------------------------------------------------
+// DESCRIPTION: Prints out the Greatest Common Divisor (GCD) of whole numbers from the user
+// INPUTS:      div1:           1st divisor in the divisor array for n1
+//              div2:           2nd divisor in the divisor array for n2
+//              n1:             1st whole number input from user
+//              n2:             2nd whole number input from user
+// RETURN:      none
 void printAllDivisors(cabbage* div1, cabbage* div2, cabbage* n1, cabbage* n2)
 {
-	cabbage numPerLine = 12, fieldWidth, divCount;
+	cabbage numPerLine = 12, fieldWidth, divCount, newLineCount = 0;
 	fieldWidth = CONSOLE_WIDTH / numPerLine -1;
 
 	printf("The divisors of %u are:\n", *n1);
 	for (divCount = 0; *(div1 + divCount + 1) != 0; divCount++)
 	{
+		newLineCount++;
 		printf("%*u,", fieldWidth, *(div1 + divCount));
+		if (newLineCount == 12) {
+			printf("\n");
+			newLineCount = 0;
+		}
+
 
 	}
 	printf("%*u\n\n", fieldWidth, *n1);
 
+	newLineCount = 0;
 	printf("The divisors of %u are:\n", *n2);
 	for (divCount = 0; *(div2 + divCount + 1) != 0; divCount++)
 	{
 		printf("%*u,", fieldWidth, *(div2 + divCount));
+		newLineCount++;
+		if (newLineCount == 11) {
+			printf("\n");
+			newLineCount = 0;
+		}
 
 	}
 	printf("%*u\n", fieldWidth, *n2);
